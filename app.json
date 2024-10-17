@@ -1,0 +1,73 @@
+{
+	"expo": {
+		"name": "meme-manager",
+		"slug": "meme-manager",
+		"version": "1.0.1",
+		"orientation": "portrait",
+		"icon": "./assets/images/icon.png",
+		"scheme": "yolosopher27.mememanager",
+		"userInterfaceStyle": "automatic",
+		"splash": {
+			"image": "./assets/images/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#111111"
+		},
+		"assetBundlePatterns": [
+			"**/*"
+		],
+		"ios": {
+			"supportsTablet": true,
+			"bundleIdentifier": "com.yolosopher27.mememanager"
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/images/adaptive-icon.png",
+				"backgroundColor": "#111111"
+			},
+			"newArchEnabled": true,
+			"permissions": [
+				"android.permission.RECORD_AUDIO"
+			],
+			"package": "com.yolosopher27.mememanager",
+			"googleServicesFile": "./google-services.json"
+		},
+		"web": {
+			"bundler": "metro",
+			"output": "static",
+			"favicon": "./assets/images/favicon.png"
+		},
+		"plugins": [
+			"expo-router",
+			"expo-font",
+			[
+				"expo-secure-store",
+				{
+					"faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+				}
+			],
+			[
+				"expo-image-picker",
+				{
+					"photosPermission": "The app accesses your photos to let you share them with your friends."
+				}
+			],
+			[
+				"expo-notifications",
+				{
+					"icon": "./assets/images/notification-icon.png",
+					"color": "#111111"
+				}
+			]
+		],
+		"experiments": {
+			"typedRoutes": true,
+			"tsconfigPaths": true
+		},
+		"extra": {
+			"eas": {
+				"projectId": "063b334e-6219-4c5a-8c6c-2ea42372c4d6"
+			}
+		},
+		"owner": "yolosopher27"
+	}
+}
