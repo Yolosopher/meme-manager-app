@@ -1,15 +1,15 @@
 import '../tamagui-web.css';
 
-import { useContext, useEffect } from 'react';
-import { StatusBar } from 'react-native';
+import { useContext, useEffect, useState } from 'react';
+import { AppStateStatus, StatusBar } from 'react-native';
 import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { Provider } from './Provider';
 import useAuthStore from 'hooks/useAuthStore';
-import moment from 'moment';
 import { SocketContext } from '@/context/SocketProvider';
 import authStore from '@/store/authStore';
+import { AppState } from 'react-native';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -68,7 +68,26 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
 };
 
 function RootLayoutNav() {
+  const [appState, setAppState] = useState<
+    'active' | 'background' | 'inactive' | 'unknown' | 'extension'
+  >(AppState.currentState);
   const auth = authStore((state) => state.auth);
+
+  // appstate
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      setAppState(nextAppState);
+    };
+
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   // init socket
   const {
@@ -82,7 +101,7 @@ function RootLayoutNav() {
     if (!connectSocket) {
       return;
     }
-    if (auth) {
+    if (auth && appState === 'active') {
       connectSocket(auth.accessToken);
       subscribeToEvent('exception', (data) => {
         console.log('exception', data);
@@ -95,7 +114,7 @@ function RootLayoutNav() {
       unsubscribeFromEvent('exception');
       disconnectSocket();
     };
-  }, [auth]);
+  }, [auth, appState]);
 
   return (
     <ThemeProvider value={DarkTheme}>

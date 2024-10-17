@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
 
@@ -26,6 +26,14 @@ type SocketContextType = {
 export const SocketContext = createContext<SocketContextType>(
   {} as SocketContextType,
 );
+
+export const useSocketContext = (): SocketContextType => {
+  const context = useContext(SocketContext);
+  if (context === undefined) {
+    throw new Error('useSocketContext must be used within a SocketProvider');
+  }
+  return context;
+};
 
 const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
