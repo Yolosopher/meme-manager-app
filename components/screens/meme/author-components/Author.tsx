@@ -5,9 +5,11 @@ type AuthorProps = {
   email: string;
   name: string;
   id: number;
+  bgColor?: string;
+  p?: string | number;
 };
 
-const Author = ({ email, name, id }: AuthorProps) => {
+const Author = ({ email, name, id, bgColor, p }: AuthorProps) => {
   return (
     <XStack
       justifyContent="flex-end"
@@ -15,7 +17,8 @@ const Author = ({ email, name, id }: AuthorProps) => {
       left={0}
       zIndex={1}
       borderRadius={'$2'}
-      backgroundColor={'$red5'}
+      backgroundColor={bgColor || '$red5'}
+      padding={p || 0}
     >
       <UserCard name={name} email={email} id={id} />
     </XStack>

@@ -38,13 +38,13 @@ const ProfilePage = ({ targetId }: ProfilePageProps) => {
       setDetailedInfo(response.data);
     } else {
       // handle error
-      toast.show('Failed to get user details', {
-        duration: 5000,
-        message:
-          typeof response.message === 'string'
-            ? response.message
-            : response.message.join('\n'),
-      });
+      // toast.show('Failed to get user details', {
+      //   duration: 5000,
+      //   message:
+      //     typeof response.message === 'string'
+      //       ? response.message
+      //       : response.message.join('\n'),
+      // });
     }
     setRefreshing(false);
   };

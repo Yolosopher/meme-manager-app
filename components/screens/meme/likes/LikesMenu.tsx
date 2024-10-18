@@ -43,13 +43,13 @@ const LikesMenu = ({
       setHaveILiked(response.data.isLiked);
       setLikesCountState(response.data.likesCount);
     } else {
-      toast.show('Failed to get like status', {
-        duration: 5000,
-        message:
-          typeof response.message === 'string'
-            ? response.message
-            : response.message.join('\n'),
-      });
+      // toast.show('Failed to get like status', {
+      //   duration: 5000,
+      //   message:
+      //     typeof response.message === 'string'
+      //       ? response.message
+      //       : response.message.join('\n'),
+      // });
     }
     setLoading(false);
   };

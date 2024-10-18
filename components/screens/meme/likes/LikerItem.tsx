@@ -14,7 +14,13 @@ const LikerItem = ({ liker: { email, id, name }, last }: LikerItemProps) => {
       theme={'dark'}
       w={'100%'}
     >
-      <UserCard email={email} name={name} textColor="$orange10" size={14} />
+      <UserCard
+        id={id}
+        email={email}
+        name={name}
+        textColor="$orange10"
+        size={14}
+      />
     </XStack>
   );
 };

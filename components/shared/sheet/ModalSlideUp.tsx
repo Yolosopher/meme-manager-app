@@ -1,13 +1,12 @@
 import { ChevronDown } from '@tamagui/lucide-icons';
-import type { SheetProps } from '@tamagui/sheet';
 import { Sheet } from '@tamagui/sheet';
 import { useState } from 'react';
 
-import { Button, H2, Text, YStack } from 'tamagui';
+import { Button, YStack } from 'tamagui';
 
 type ModalSlideUpProps = {
   triggerButtonProps?: React.ComponentProps<typeof Button>;
-  triggerButtonContent: React.ReactNode;
+  triggerButtonContent?: React.ReactNode;
   modalContent: React.ReactNode;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,9 +23,11 @@ const ModalSlideUp = ({
 
   return (
     <>
-      <Button {...triggerButtonProps} onPress={() => setOpen((prev) => true)}>
-        {triggerButtonContent}
-      </Button>
+      {triggerButtonContent && (
+        <Button {...triggerButtonProps} onPress={() => setOpen((prev) => true)}>
+          {triggerButtonContent}
+        </Button>
+      )}
       <Sheet
         forceRemoveScrollEnabled={open}
         modal={true}

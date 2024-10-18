@@ -3,15 +3,17 @@ import * as Notifications from 'expo-notifications';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-interface NotificationContextType {
+interface PushNotificationContextType {
   expoPushToken: string | null;
   lastNotificationId: number | null;
   error: Error | null;
 }
 const LAST_PUSH_NOTIFICATION_ID = 'lastPushNotificationId';
-const NotificationContext = createContext<NotificationContextType | null>(null);
+const NotificationContext = createContext<PushNotificationContextType | null>(
+  null,
+);
 
-export const usePushNotification = (): NotificationContextType => {
+export const usePushNotification = (): PushNotificationContextType => {
   const context = useContext(NotificationContext);
   if (!context) {
     throw new Error(
@@ -19,14 +21,16 @@ export const usePushNotification = (): NotificationContextType => {
     );
   }
 
-  return context as NotificationContextType;
+  return context as PushNotificationContextType;
 };
 
-interface NotificationProviderProps {
+interface PushNotificationProviderProps {
   children: React.ReactNode;
 }
 
-const PushNotificationProvider = ({ children }: NotificationProviderProps) => {
+const PushNotificationProvider = ({
+  children,
+}: PushNotificationProviderProps) => {
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
   const [lastNotificationId, setLastNotificationId] = useState<number | null>(
     null,

@@ -1,15 +1,17 @@
 import Loading from 'components/shared/loader/Loading';
 import request from 'request';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useToastController } from '@tamagui/toast';
-import { ScrollView, Text, View, YStack } from 'tamagui';
+import { ScrollView, Text, View, XStack, YStack } from 'tamagui';
 import { NativeStackNavigationOptions } from 'react-native-screens/lib/typescript/native-stack/types';
 import EditMemeForm from './EditMemeForm';
 import authStore from '@/store/authStore';
 import SizedImage from '@/components/shared/SizedImage';
 import LikesMenu from './likes/LikesMenu';
-import { useNavigation } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import { useIsFocused } from '@react-navigation/native';
+import Author from './author-components/Author';
+import AuthorActions from './author-components/AuthorActions';
 
 type MemePageProps = {
   memeId: string;
@@ -62,7 +64,14 @@ const MemePage = ({ memeId }: MemePageProps) => {
     }
   }, [memeData?.title]);
 
-  return !memeData || loading ? (
+  const isAuthor = useMemo(() => {
+    if (memeData && auth) {
+      if (auth.id === memeData.authorId) return true;
+    }
+    return false;
+  }, [memeData?.authorId, auth?.id]);
+
+  return !memeData || !auth || loading ? (
     <View
       height={'100%'}
       width={'100%'}
@@ -78,7 +87,29 @@ const MemePage = ({ memeId }: MemePageProps) => {
       w="100%"
     >
       <YStack p={'$4'} gap={'$4'}>
-        <View borderRadius={'$4'}>
+        <XStack
+          jc={'flex-end'}
+          w="100%"
+          justifyContent="space-between"
+          ai={'center'}
+        >
+          <Author
+            name={memeData.author.name}
+            email={memeData.author.email}
+            id={memeData.authorId}
+            p={'$2'}
+          />
+          {isAuthor && (
+            <AuthorActions
+              authorId={memeData.author.id}
+              accessToken={auth.accessToken}
+              memeId={memeData.id}
+              resetCB={() => router.back()}
+              showDelete
+            />
+          )}
+        </XStack>
+        <View borderRadius={'$4'} ov={'hidden'}>
           <SizedImage imageUrl={memeData.imageUrl} objectFit="contain" />
         </View>
         <Text fontFamily={'AfacadBlack'} fontSize={30}>

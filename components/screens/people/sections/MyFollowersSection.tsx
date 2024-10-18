@@ -36,13 +36,13 @@ const MyFollowersSection = () => {
       setHasNextPage(!!next_page);
       setTotal(meta.total);
     } else {
-      toast.show('Failed to get followers', {
-        duration: 5000,
-        message:
-          typeof response.message === 'string'
-            ? response.message
-            : response.message.join('\n'),
-      });
+      // toast.show('Failed to get followers', {
+      //   duration: 5000,
+      //   message:
+      //     typeof response.message === 'string'
+      //       ? response.message
+      //       : response.message.join('\n'),
+      // });
     }
     setRefreshing(false);
   };
