@@ -23,25 +23,27 @@ export function Provider({
   const colorScheme = useColorScheme();
 
   return (
-    <TamaguiProvider config={config} defaultTheme={'dark'} {...rest}>
-      <ToastProvider
-        swipeDirection="horizontal"
-        duration={6000}
-        native={
-          [
-            /* uncomment the next line to do native toasts on mobile. NOTE: it'll require you making a dev build and won't work with Expo Go */
-            // 'mobile'
-          ]
-        }
-      >
-        <SocketProvider>
+    <SocketProvider>
+      <TamaguiProvider config={config} defaultTheme={'dark'} {...rest}>
+        <PushNotificationProvider>
           <InAppNotificationsProvider>
-            <PushNotificationProvider>{children}</PushNotificationProvider>
+            <ToastProvider
+              swipeDirection="horizontal"
+              duration={6000}
+              native={
+                [
+                  /* uncomment the next line to do native toasts on mobile. NOTE: it'll require you making a dev build and won't work with Expo Go */
+                  // 'mobile'
+                ]
+              }
+            >
+              {children}
+              <CurrentToast />
+              <ToastViewport top="$8" left={0} right={0} />
+            </ToastProvider>
           </InAppNotificationsProvider>
-        </SocketProvider>
-        <CurrentToast />
-        <ToastViewport top="$8" left={0} right={0} />
-      </ToastProvider>
-    </TamaguiProvider>
+        </PushNotificationProvider>
+      </TamaguiProvider>
+    </SocketProvider>
   );
 }

@@ -25,11 +25,16 @@ import { useInAppNotifications } from '@/context/InAppNotificationsProvider';
 
 export default function TabLayout() {
   const theme = useTheme();
+  const activeNotifStyles = {
+    backgroundColor: theme.orange10.val,
+    color: '$black1',
+  };
   const { auth, logout } = useAuthStore();
   const { openNotifications, dot } = useInAppNotifications();
   if (!auth) {
     return <Redirect href="/(auth)" />;
   }
+
   return (
     <Tabs
       backBehavior="history"
@@ -46,24 +51,16 @@ export default function TabLayout() {
           textTransform: 'capitalize',
           letterSpacing: -0.5,
         },
-        headerStyle: {},
-        headerLeftContainerStyle: {
-          backgroundColor: theme.blue10.val,
-          // maxHeight: 20,
-          // flexGrow: 0,
-        },
-        headerRightContainerStyle: {
-          // maxHeight: 20,
-          // flexGrow: 0,
-          backgroundColor: theme.red10.val,
-        },
         tabBarStyle: {
           height: 70,
           paddingTop: 10,
           paddingBottom: 20,
         },
         headerRight: () => (
-          <Button onPress={openNotifications}>
+          <Button
+            onPress={openNotifications}
+            style={dot ? activeNotifStyles : {}}
+          >
             <Button.Icon>
               {dot ? <BellDot size={16} /> : <Bell size={16} />}
             </Button.Icon>

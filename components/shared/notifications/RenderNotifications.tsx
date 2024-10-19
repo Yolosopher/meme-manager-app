@@ -1,13 +1,14 @@
 import { Button, Text, XStack, YStack } from 'tamagui';
 import { RefreshCcw } from '@tamagui/lucide-icons';
 import NotificationItem from './NotificationItem';
-import { useInAppNotifications } from '@/context/InAppNotificationsProvider';
 
 type RenderNotificationsProps = {
   notifications: INotification[];
   qty: number;
   isEmpty: boolean;
   closeNotifications: () => void;
+  refreshNotifications: () => void;
+  markAsRead: (id: number) => void;
 };
 
 export const RenderNotifications = ({
@@ -15,9 +16,9 @@ export const RenderNotifications = ({
   qty,
   closeNotifications,
   isEmpty,
+  refreshNotifications,
+  markAsRead,
 }: RenderNotificationsProps) => {
-  const { refreshNotifications } = useInAppNotifications();
-
   return (
     <>
       <XStack w="100%" jc={'flex-end'}>
@@ -65,6 +66,7 @@ export const RenderNotifications = ({
                 notification={notification}
                 last={index === qty - 1}
                 cb={closeNotifications}
+                markAsRead={markAsRead}
               />
             );
           })

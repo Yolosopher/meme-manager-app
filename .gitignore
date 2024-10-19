@@ -49,6 +49,6 @@ android
 todos.md
 
 # secrets
-google-services.json
+# google-services.json
 meme-manager-c*.json
-credentials.json
+# credentials.json

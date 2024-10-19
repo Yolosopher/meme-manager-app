@@ -4,7 +4,15 @@ import authStore from '@/store/authStore';
 import { Heart, ThumbsUp } from '@tamagui/lucide-icons';
 import { useToastController } from '@tamagui/toast';
 import { useEffect, useState } from 'react';
-import { Button, Text, useTheme, View, XStack, YStack } from 'tamagui';
+import {
+  Button,
+  PortalHost,
+  Text,
+  useTheme,
+  View,
+  XStack,
+  YStack,
+} from 'tamagui';
 import RenderLikers from './RenderLikers';
 
 type LikesMenuProps = {
@@ -83,74 +91,77 @@ const LikesMenu = ({
     getLikeStatus();
   }, []);
   return (
-    <XStack w="100%" gap={'$2'} jc="space-between" ai="center">
-      <View height={50} ac={'center'} jc={'center'}>
-        <ModalSlideUp
-          open={openLikes}
-          setOpen={setOpenLikes}
-          triggerButtonProps={{
-            variant: 'outlined',
-            size: '$1',
-            gap: '$0',
-            borderRadius: '$0',
-            borderWidth: '$0',
-            disabled: loading,
-            color: '$black1',
-          }}
-          triggerButtonContent={
-            <Button asChild>
-              <XStack>
-                <XStack ai={'center'} gap={6}>
-                  <Text
-                    mt={3}
-                    tt={'uppercase'}
-                    lineHeight={22}
-                    fontSize={22}
-                    fontFamily={'AfacadBlack'}
-                    textDecorationLine="underline"
-                  >
-                    Likes:
-                  </Text>
-                  <Text
-                    fontFamily={'AfacadBlack'}
-                    lineHeight={28}
-                    fontSize={28}
-                    color={'$red11'}
-                  >
-                    {likesCountState}
-                  </Text>
+    <>
+      <XStack w="100%" gap={'$2'} jc="space-between" ai="center">
+        <View height={50} ac={'center'} jc={'center'}>
+          <ModalSlideUp
+            open={openLikes}
+            setOpen={setOpenLikes}
+            triggerButtonProps={{
+              variant: 'outlined',
+              size: '$1',
+              gap: '$0',
+              borderRadius: '$0',
+              borderWidth: '$0',
+              disabled: loading,
+              color: '$black1',
+            }}
+            triggerButtonContent={
+              <Button asChild>
+                <XStack>
+                  <XStack ai={'center'} gap={6}>
+                    <Text
+                      mt={3}
+                      tt={'uppercase'}
+                      lineHeight={22}
+                      fontSize={22}
+                      fontFamily={'AfacadBlack'}
+                      textDecorationLine="underline"
+                    >
+                      Likes:
+                    </Text>
+                    <Text
+                      fontFamily={'AfacadBlack'}
+                      lineHeight={28}
+                      fontSize={28}
+                      color={'$red11'}
+                    >
+                      {likesCountState}
+                    </Text>
+                  </XStack>
                 </XStack>
-              </XStack>
-            </Button>
-          }
-          modalContent={openLikes && <RenderLikers memeId={memeId} />}
-        />
-      </View>
-      <Button
-        gap={0}
-        disabled={loading}
-        onPress={toggleLike}
-        bg={haveILiked ? '$red8' : '$white1'}
-        width={110}
-        borderWidth={2}
-        jc={'flex-start'}
-        pressStyle={{
-          borderColor: theme.red8.val,
-          backgroundColor: theme.red8.val,
-        }}
-      >
-        <Button.Icon>
-          <ThumbsUp
-            color={haveILiked ? '$white8' : '$red11'}
-            size={18}
-            // fill={haveILiked ? theme$white8.val : 'transparent'}
+              </Button>
+            }
+            modalContent={openLikes && <RenderLikers memeId={memeId} />}
+            hostname={`likes-for-${memeId}`}
           />
-        </Button.Icon>
-        <Text fontSize={18} color={haveILiked ? '$white8' : '$red11'}>
-          {haveILiked ? 'Liked' : 'Like'}
-        </Text>
-      </Button>
-    </XStack>
+        </View>
+        <Button
+          gap={0}
+          disabled={loading}
+          onPress={toggleLike}
+          bg={haveILiked ? '$red8' : '$white1'}
+          width={110}
+          borderWidth={2}
+          jc={'flex-start'}
+          pressStyle={{
+            borderColor: theme.red8.val,
+            backgroundColor: theme.red8.val,
+          }}
+        >
+          <Button.Icon>
+            <ThumbsUp
+              color={haveILiked ? '$white8' : '$red11'}
+              size={18}
+              // fill={haveILiked ? theme$white8.val : 'transparent'}
+            />
+          </Button.Icon>
+          <Text fontSize={18} color={haveILiked ? '$white8' : '$red11'}>
+            {haveILiked ? 'Liked' : 'Like'}
+          </Text>
+        </Button>
+      </XStack>
+    </>
   );
 };
 

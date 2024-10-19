@@ -1,5 +1,13 @@
 import { useMemo } from 'react';
-import { ListItemFrame, Text, View, XStack, YStack } from 'tamagui';
+import {
+  ListItemFrame,
+  PortalHost,
+  PortalProvider,
+  Text,
+  View,
+  XStack,
+  YStack,
+} from 'tamagui';
 import AuthorActions from './author-components/AuthorActions';
 import Author from './author-components/Author';
 import LikesMenu from './likes/LikesMenu';

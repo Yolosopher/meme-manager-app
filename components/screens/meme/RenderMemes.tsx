@@ -1,7 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FlatList, RefreshControl } from 'react-native';
 import request from 'request';
-import { Button, Separator, Text, View, XStack, YStack } from 'tamagui';
+import {
+  Button,
+  PortalProvider,
+  Separator,
+  Text,
+  View,
+  XStack,
+  YStack,
+} from 'tamagui';
 import MemeItem from './MemeItem';
 import { useIsFocused } from '@react-navigation/native';
 import authStore from '@/store/authStore';
@@ -86,87 +94,89 @@ const RenderMemes = ({ authorId }: RenderMemesProps) => {
   };
 
   return (
-    <YStack
-      w={'100%'}
-      height={'100%'}
-      theme={'dark'}
-      jc={'center'}
-      ai={'center'}
-    >
-      {total === 0 ? (
-        <XStack
-          w={'100%'}
-          h={'100%'}
-          flex={1}
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Text
-            fontFamily={'AfacadBlack'}
-            textTransform="uppercase"
-            fontSize={32}
-            color={'$red10'}
-            flexGrow={0}
-            height={50}
+    <PortalProvider>
+      <YStack
+        w={'100%'}
+        height={'100%'}
+        theme={'dark'}
+        jc={'center'}
+        ai={'center'}
+      >
+        {total === 0 ? (
+          <XStack
+            w={'100%'}
+            h={'100%'}
+            flex={1}
+            justifyContent="center"
+            alignItems="center"
           >
-            {auth.id === authorId
-              ? 'You have no memes'
-              : 'This user has no memes'}
-          </Text>
-        </XStack>
-      ) : (
-        <FlatList
-          contentContainerStyle={{
-            paddingBottom: 20,
-          }}
-          indicatorStyle="white"
-          style={{
-            gap: 8,
-            padding: 10,
-            width: '100%',
-          }}
-          ItemSeparatorComponent={() => <Separator height={20} />}
-          ListFooterComponent={
-            total > memoizedMemesArray.length && !refreshing ? (
-              <Button
-                onPress={() => {
-                  fetchMemes(currentPage + 1);
-                }}
-                flexShrink={0}
-                height={50}
-                my={'$5'}
-              >
-                Load More
-              </Button>
-            ) : null
-          }
-          keyExtractor={(item) => item.id.toString()}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={() => {
-                reset();
-                fetchMemes();
-              }}
-            />
-          }
-          data={memoizedMemesArray}
-          onEndReached={() => {
-            if (hasNextPage > 0 && !refreshing) {
-              handleLoadMore();
+            <Text
+              fontFamily={'AfacadBlack'}
+              textTransform="uppercase"
+              fontSize={32}
+              color={'$red10'}
+              flexGrow={0}
+              height={50}
+            >
+              {auth.id === authorId
+                ? 'You have no memes'
+                : 'This user has no memes'}
+            </Text>
+          </XStack>
+        ) : (
+          <FlatList
+            contentContainerStyle={{
+              paddingBottom: 20,
+            }}
+            indicatorStyle="white"
+            style={{
+              gap: 8,
+              padding: 10,
+              width: '100%',
+            }}
+            ItemSeparatorComponent={() => <Separator height={20} />}
+            ListFooterComponent={
+              total > memoizedMemesArray.length && !refreshing ? (
+                <Button
+                  onPress={() => {
+                    fetchMemes(currentPage + 1);
+                  }}
+                  flexShrink={0}
+                  height={50}
+                  my={'$5'}
+                >
+                  Load More
+                </Button>
+              ) : null
             }
-          }}
-          renderItem={({ item }) => (
-            <MemeItem
-              auth={auth}
-              key={item.id}
-              memeData={item}
-              resetCB={reset}
-            />
-          )}
-        />
-      )}
-    </YStack>
+            keyExtractor={(item) => item.id.toString()}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => {
+                  reset();
+                  fetchMemes();
+                }}
+              />
+            }
+            data={memoizedMemesArray}
+            onEndReached={() => {
+              if (hasNextPage > 0 && !refreshing) {
+                handleLoadMore();
+              }
+            }}
+            renderItem={({ item }) => (
+              <MemeItem
+                auth={auth}
+                key={item.id}
+                memeData={item}
+                resetCB={reset}
+              />
+            )}
+          />
+        )}
+      </YStack>
+    </PortalProvider>
   );
 };
 

@@ -2,48 +2,38 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import notificationStore from '@/store/notificationStore';
 import { SocketContext } from './SocketProvider';
 import authStore from '@/store/authStore';
-import { RenderNotifications } from '@/components/shared/notifications/RenderNotifications';
-import ModalSlideUp from '@/components/shared/sheet/ModalSlideUp';
-import { Button, PortalProvider } from 'tamagui';
-import { Bell, BellDot } from '@tamagui/lucide-icons';
+import { PortalHost, PortalProvider } from 'tamagui';
+import NotificationsModal from '@/components/shared/sheet/NotificationsModal';
 
-const activeNotifStyles = { backgroundColor: '$orange10', color: '$black1' };
-
-type InAppNotificationContextType = {
+export type InAppNotificationContextType = {
   closeNotifications: () => void;
   openNotifications: () => void;
   markAsRead: (id: number) => void;
   refreshNotifications: () => void;
   dot: boolean;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isEmpty: boolean;
+  sortedNotifications: INotification[];
+  qty: number;
 };
 
-const InAppNotificationsContext =
+export const InAppNotificationsContext =
   createContext<InAppNotificationContextType | null>(null);
 
-interface InAppNotificationProviderProps {
+export interface InAppNotificationProviderProps {
   children: React.ReactNode;
 }
-
-export const useInAppNotifications = (): InAppNotificationContextType => {
-  const context = useContext(InAppNotificationsContext);
-  if (!context) {
-    throw new Error(
-      'useInAppNotifications must be used within a InAppNotificationsProvider',
-    );
-  }
-
-  return context as InAppNotificationContextType;
-};
 
 const InAppNotificationsProvider = ({
   children,
 }: InAppNotificationProviderProps) => {
+  const auth = authStore((state) => state.auth);
   const [open, setOpen] = useState<boolean>(false);
   const { setNotifications, markAsReadInState, notifications } =
     notificationStore();
   const { emitEvent, subscribeToEvent, unsubscribeFromEvent, isConnected } =
     useContext(SocketContext);
-  const auth = authStore((state) => state.auth);
 
   // helpers
 
@@ -68,7 +58,7 @@ const InAppNotificationsProvider = ({
   };
   // initialize
   useEffect(() => {
-    console.log('initin notifications....');
+    // console.log('initin notifications....');
     if (isConnected) {
       subscribeToEvent<INotification[]>('notifications', (data) => {
         setNotifications(data);
@@ -120,30 +110,28 @@ const InAppNotificationsProvider = ({
         markAsRead,
         refreshNotifications,
         dot,
+        open,
+        setOpen,
+        isEmpty,
+        sortedNotifications,
+        qty,
       }}
     >
-      <Button style={dot ? activeNotifStyles : undefined}>
-        <Button.Icon>
-          {dot ? <BellDot size={16} /> : <Bell size={16} />}
-        </Button.Icon>
-      </Button>
-      <PortalProvider shouldAddRootHost>
-        <ModalSlideUp
-          open={open}
-          setOpen={setOpen}
-          modalContent={
-            <RenderNotifications
-              notifications={sortedNotifications}
-              qty={qty}
-              isEmpty={isEmpty}
-              closeNotifications={closeNotifications}
-            />
-          }
-        />
-      </PortalProvider>
+      <NotificationsModal />
       {children}
     </InAppNotificationsContext.Provider>
   );
+};
+
+export const useInAppNotifications = (): InAppNotificationContextType => {
+  const context = useContext(InAppNotificationsContext);
+  if (!context) {
+    throw new Error(
+      'useInAppNotifications must be used within a InAppNotificationsProvider',
+    );
+  }
+
+  return context as InAppNotificationContextType;
 };
 
 export default InAppNotificationsProvider;

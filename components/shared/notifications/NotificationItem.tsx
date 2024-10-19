@@ -1,18 +1,17 @@
 import { Image, Text, View, XStack, YStack } from 'tamagui';
 import UserCard from '../UserCard';
 import { router } from 'expo-router';
-import authStore from '@/store/authStore';
-import { Bell, BellDot, ThumbsUp } from '@tamagui/lucide-icons';
+import { Bell, BellDot } from '@tamagui/lucide-icons';
 import moment from 'moment';
 import { placeholderImage } from '@/constants/PlaceholderImage';
 import { usePushNotification } from '@/context/PushNotificationProvider';
 import { useEffect } from 'react';
-import { useInAppNotifications } from '@/context/InAppNotificationsProvider';
 
 type NotificationItemProps = {
   notification: INotification;
   last?: boolean;
   cb?: () => void;
+  markAsRead: (id: number) => void;
 };
 
 const NotificationItem = ({
@@ -29,9 +28,9 @@ const NotificationItem = ({
   },
   last,
   cb,
+  markAsRead,
 }: NotificationItemProps) => {
   const { lastNotificationId } = usePushNotification();
-  const { markAsRead } = useInAppNotifications();
 
   const handlePress = () => {
     if (!read) {

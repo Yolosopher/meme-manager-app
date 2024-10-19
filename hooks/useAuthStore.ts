@@ -11,6 +11,26 @@ const useAuthStore = () => {
   const { auth, setAuth } = authStore();
   const [authLoading, setAuthLoading] = useState<boolean>(true);
 
+  const logout = async (withRequest = true) => {
+    try {
+      if (withRequest) {
+        await request<boolean>({
+          url: '/auth/logout',
+          method: 'GET',
+          token: auth!.accessToken,
+        });
+      }
+    } finally {
+      setAuth(null);
+      await deleteSecureStore('auth');
+    }
+  };
+
+  const login = async (authResult: AuthResult) => {
+    setAuth(authResult);
+    await setSecureStore('auth', authResult);
+  };
+
   const authenticate = async () => {
     if (!authLoading) {
       setAuthLoading(true);
@@ -25,9 +45,8 @@ const useAuthStore = () => {
           url: '/auth/profile',
           token: authFromStorage!.accessToken,
         });
-        if (data.success === false) {
-          setAuth(null);
-          await deleteSecureStore('auth');
+        if (!data.success) {
+          logout(false);
         } else {
           const newAuth: AuthResult = {
             ...auth!,
@@ -41,26 +60,6 @@ const useAuthStore = () => {
     } finally {
       setAuthLoading(false);
     }
-  };
-
-  const logout = async () => {
-    try {
-      await request<boolean>({
-        url: '/auth/logout',
-        method: 'GET',
-        token: auth!.accessToken,
-      });
-    } catch (error) {
-      // do nothing
-    } finally {
-      setAuth(null);
-      await deleteSecureStore('auth');
-    }
-  };
-
-  const login = async (authResult: AuthResult) => {
-    setAuth(authResult);
-    await setSecureStore('auth', authResult);
   };
 
   return {

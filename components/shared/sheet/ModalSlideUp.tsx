@@ -10,6 +10,7 @@ type ModalSlideUpProps = {
   modalContent: React.ReactNode;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  hostname?: string;
 };
 
 const ModalSlideUp = ({
@@ -18,6 +19,7 @@ const ModalSlideUp = ({
   modalContent,
   open,
   setOpen,
+  hostname,
 }: ModalSlideUpProps) => {
   const [position, setPosition] = useState<number>(0);
 
@@ -30,7 +32,6 @@ const ModalSlideUp = ({
       )}
       <Sheet
         forceRemoveScrollEnabled={open}
-        modal={true}
         open={open}
         onOpenChange={setOpen}
         snapPoints={[90]}
@@ -40,13 +41,16 @@ const ModalSlideUp = ({
         onPositionChange={setPosition}
         zIndex={100_000}
         animation="medium"
+        unmountChildrenWhenHidden
+        modal={!!hostname}
+        native={false}
+        {...(hostname ? { portalProps: { host: hostname } } : {})}
       >
         <Sheet.Overlay
           animation="medium"
           enterStyle={{ opacity: 0 }}
           exitStyle={{ opacity: 0 }}
         />
-
         <Sheet.Handle />
         <Sheet.Frame theme="dark" w={'100%'} alignItems="center">
           <Sheet.ScrollView w={'100%'}>
